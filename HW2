@@ -1,0 +1,22 @@
+
+# HW 2 CPE 593
+#Jonah Kramer
+
+print ('Type a word or phrase!')
+phrase = input()
+print ('You entered {}'.format(phrase))
+length = len(phrase)
+
+def reverse(phrase):
+    output = ""
+    for i in  range(length-1,-1,-1):
+        output += phrase[i]
+    return output
+    
+print (f'{phrase} backwards is: {reverse(phrase)}')
+
+if reverse(phrase) == phrase:
+
+    print (f'{phrase} is a palindrome!')
+else:
+    print (f'{phrase} is not a palindrome.')
