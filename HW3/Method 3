@@ -1,0 +1,74 @@
+class SymbolBalance:
+    def __init__(self):
+        self.stack = []
+
+    def checkSyntax(self, input_str):
+        for char in input_str:
+            if char in "{[(":
+                self.stack.append(char)
+            elif char == "}":
+                if not self.stack:
+                    return f"Error2: Empty stack popped: {char}"
+                top_symbol = self.stack.pop()
+                if top_symbol != "{":
+                    return f"Error3: Symbol mismatch: {char}, {top_symbol}"
+            elif char == "]":
+                if not self.stack:
+                    return f"Error2: Empty stack popped: {char}"
+                top_symbol = self.stack.pop()
+                if top_symbol != "[":
+                    return f"Error3: Symbol mismatch: {char}, {top_symbol}"
+            elif char == ")":
+                if not self.stack:
+                    return f"Error2: Empty stack popped: {char}"
+                top_symbol = self.stack.pop()
+                if top_symbol != "(":
+                    return f"Error3: Symbol mismatch: {char}, {top_symbol}"
+            elif char == "/*":
+                self.stack.append("/*") 
+            elif char == "*/":
+                if not self.stack or self.stack[-1] != "/*":
+                    return f"Error3: Symbol mismatch: {char}, {self.stack[-1]}"
+
+        if self.stack:
+            return f"Error1: Non-empty stack after passing: {self.stack[-1]}"
+        else:
+            return "Symbol Balanced"
+
+    def postfixExpress(self, input_str):
+        syntax_result = self.checkSyntax(input_str)
+        if syntax_result != "Symbol Balanced":
+            return f"Error: Input is not symbolically balanced, cannot convert to postfix. ({syntax_result})"
+
+        precedence = {'+': 1, '-': 1, '*': 2, '/': 2, '^': 3}
+
+        def infix_to_postfix(expression):
+            stack = []
+            postfix = []
+            for char in expression:
+                if char.isalnum():
+                    postfix.append(char)
+                elif char in "+-*/^":
+                    while (stack and stack[-1] != "(" and
+                           precedence[char] <= precedence.get(stack[-1], 0)):
+                        postfix.append(stack.pop())
+                    stack.append(char)
+                elif char == "(":
+                    stack.append(char)
+                elif char == ")":
+                    while stack and stack[-1] != "(":
+                        postfix.append(stack.pop())
+                    if stack and stack[-1] == "(":
+                        stack.pop()
+            while stack:
+                postfix.append(stack.pop())
+            return "".join(postfix)
+
+        return infix_to_postfix(input_str)
+
+
+if __name__ == "__main__":
+    symbol_balance = SymbolBalance()
+    input_str = input("Enter an expression: ")
+    postfix_result = symbol_balance.postfixExpress(input_str)
+    print("Postfix expression:", postfix_result)
