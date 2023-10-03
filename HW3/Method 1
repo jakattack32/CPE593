@@ -1,0 +1,16 @@
+class SymbolBalance:
+    @staticmethod
+    
+    def parseInput(): 
+        
+        input_str = input("Enter an equation: ")
+        
+        import re
+        input_str = re.sub(r'/\*.*?\*/', '', input_str)
+        
+        return input_str
+
+if __name__ == "__main__":
+    symbol_balance = SymbolBalance()
+    input_str = symbol_balance.parseInput()
+    print("Parsed Input:", input_str)
