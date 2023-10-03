@@ -3,50 +3,38 @@ class SymbolBalance:
         self.stack = []
 
     def checkSyntax(self, input_str):
-        for char_index, char in enumerate(input_str):
+        for char in input_str:
             if char in "{[(":
-                self.stack.append((char, char_index))  
-            elif char in "}])":
+                self.stack.append(char)
+            elif char == "}":
                 if not self.stack:
                     return f"Error2: Empty stack popped: {char}"
-                top_symbol, top_index = self.stack.pop()
-                if not self.isMatchingPair(top_symbol, char):
+                top_symbol = self.stack.pop()
+                if top_symbol != "{":
                     return f"Error3: Symbol mismatch: {char}, {top_symbol}"
-                
-           
-            elif char == '{':
-                self.stack.append(('(', char_index))  
-            elif char == '}':
+            elif char == "]":
                 if not self.stack:
                     return f"Error2: Empty stack popped: {char}"
-                top_symbol, top_index = self.stack.pop()
-                if top_symbol != '(':
+                top_symbol = self.stack.pop()
+                if top_symbol != "[":
                     return f"Error3: Symbol mismatch: {char}, {top_symbol}"
-            elif char == '[':
-                self.stack.append(('(', char_index)) 
-            elif char == ']':
+            elif char == ")":
                 if not self.stack:
                     return f"Error2: Empty stack popped: {char}"
-                top_symbol, top_index = self.stack.pop()
-                if top_symbol != '(':
+                top_symbol = self.stack.pop()
+                if top_symbol != "(":
                     return f"Error3: Symbol mismatch: {char}, {top_symbol}"
-            elif char == '(':
-                self.stack.append((char, char_index))
+            
 
         if self.stack:
-            top_symbol, top_index = self.stack.pop()
-            return f"Error1: Non-empty stack after parsing: {top_symbol} at index {top_index}"
+            return f"Error1: Non-empty stack after passing: {self.stack[-1]}"
+ 
         else:
             return "Symbol Balanced"
 
-    @staticmethod
-    def isMatchingPair(opening, closing):
-        return (opening == '(' and closing == ')' or
-                opening == '[' and closing == ']' or
-                opening == '{' and closing == '}')
-
+# Example usage:
 if __name__ == "__main__":
     symbol_balance = SymbolBalance()
     input_str = input("Enter an expression: ")
-    syntax_result = symbol_balance.checkSyntax(list(input_str))  
+    syntax_result = symbol_balance.checkSyntax(input_str)
     print(syntax_result)
